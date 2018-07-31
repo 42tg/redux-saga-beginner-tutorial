@@ -1,11 +1,23 @@
-export default function counter(state = 0, action) {
+export default function counter(state = [], action) {
+  console.log(action)
   switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case 'INCREMENT_IF_ODD':
-      return (state % 2 !== 0) ? state + 1 : state
-    case 'DECREMENT':
-      return state - 1
+    case 'CREATE':
+      return [
+        ...state,
+        {
+          id: action.id,
+          text: action.text,
+          completed: false
+        }
+      ]
+    case 'TOGGLE':
+      return state.map(
+        todo => (todo.id === action.id) 
+          ? {...todo, completed: !todo.completed} 
+          : todo
+      )
+    case 'DELETE':
+      return state.filter(todo => todo.id !== action.id)
     default:
       return state
   }

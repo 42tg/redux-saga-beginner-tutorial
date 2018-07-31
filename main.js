@@ -2,21 +2,28 @@ import "babel-polyfill"
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore, applyMiddleware } from 'redux'
 
-import Counter from './Counter'
+import { createStore } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+
+import TodoList from './TodoList'
+
 import reducer from './reducers'
 
-const store = createStore(reducer)
+import {addTodo, toggleTodo, deleteTodo } from './actions'
 
-const action = type => store.dispatch({type})
+const sagaMiddleware = createSagaMiddleware()
+const store = createStore(
+  reducer,
+)
 
 function render() {
   ReactDOM.render(
-    <Counter
+    <TodoList
       value={store.getState()}
-      onIncrement={() => action('INCREMENT')}
-      onDecrement={() => action('DECREMENT')} />,
+        onCreate={(value) => store.dispatch(addTodo(value))}
+        onToggle={(id) => store.dispatch(toggleTodo(id))}
+        onDelete={(id) => store.dispatch(deleteTodo(id))} />,
     document.getElementById('root')
   )
 }
